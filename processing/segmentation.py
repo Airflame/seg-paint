@@ -4,13 +4,13 @@ import numpy as np
 import cv2
 import time
 
+from processing.utility import Utility
+
 
 class Segmentation:
     @staticmethod
     def k_means(file: UploadFile):
-        contents = file.file.read()
-        buf = np.fromstring(contents, np.uint8)
-        img = cv2.imdecode(buf, cv2.IMREAD_COLOR)
+        img = cv2.imdecode(Utility.extract_image(file), cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         two_dimage = img.reshape((-1, 3))
         two_dimage = np.float32(two_dimage)
