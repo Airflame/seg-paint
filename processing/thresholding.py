@@ -9,11 +9,31 @@ from processing.utility import Utility
 class Thresholding:
     @staticmethod
     def binarisation(file: UploadFile):
-        img = cv2.imdecode(Utility.extract_image(file), cv2.IMREAD_COLOR)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        ret, thresh1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
-        cv2.imwrite("data/" + file.filename, thresh1)
+        ret, thresh = cv2.threshold(
+            Utility.extract_image_binarisation(file), 127, 255, cv2.THRESH_BINARY)
+        cv2.imwrite("data/" + file.filename, thresh)
 
-        print("Time elapsed {} s".format(end - start))
-        plt.imshow(thresh1)
+        plt.imshow(thresh)
         plt.show()
+
+    @staticmethod
+    def otsu(file: UploadFile):
+        ret, thresh = cv2.threshold(
+            Utility.extract_image_binarisation(file), 127, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        cv2.imwrite("data/" + file.filename, thresh)
+
+        plt.imshow(thresh)
+        plt.show()
+
+    @staticmethod
+    def adaptive(file: UploadFile):
+        thresh = cv2.adaptiveThreshold(
+            Utility.extract_image_binarisation(file), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY, 11, 5)
+        cv2.imwrite("data/" + file.filename, thresh)
+
+        plt.imshow(thresh)
+        plt.show()
+
+
+

@@ -13,6 +13,18 @@ async def upload_image(file: UploadFile):
 
 
 @router.post("/images/binarisation")
-async def upload_image(file: UploadFile):
+async def upload_image_binarisation(file: UploadFile):
     Thresholding.binarisation(file)
+    return {"filename": file.filename}
+
+
+@router.post("/images/otsu")
+async def upload_image_otsu(file: UploadFile):
+    Thresholding.otsu(file)
+    return {"filename": file.filename}
+
+
+@router.post("/images/adaptive")
+async def upload_image_adaptive(file: UploadFile):
+    Thresholding.adaptive(file)
     return {"filename": file.filename}
