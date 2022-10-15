@@ -40,3 +40,9 @@ async def upload_image_adaptive(file: UploadFile):
 async def upload_image_niblack(file: UploadFile):
     Thresholding.niblack(file)
     return {"filename": file.filename}
+
+
+@router.post("/images/contour")
+async def upload_image_niblack(file: UploadFile):
+    Segmentation.contour(file)
+    return {"filename": file.filename}
