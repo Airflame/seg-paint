@@ -12,6 +12,12 @@ async def upload_image(file: UploadFile):
     return {"filename": file.filename}
 
 
+@router.post("/images/watershed")
+async def upload_image(file: UploadFile):
+    Segmentation.watershed(file)
+    return {"filename": file.filename}
+
+
 @router.post("/images/binarisation")
 async def upload_image_binarisation(file: UploadFile):
     Thresholding.binarisation(file)

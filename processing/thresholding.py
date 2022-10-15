@@ -10,7 +10,7 @@ class Thresholding:
     @staticmethod
     def binarisation(file: UploadFile):
         ret, thresh = cv2.threshold(
-            Utility.extract_image_binarisation(file), 127, 255, cv2.THRESH_BINARY)
+            Utility.extract_image_gray(file), 127, 255, cv2.THRESH_BINARY)
         cv2.imwrite("data/" + file.filename, thresh)
 
         plt.imshow(thresh)
@@ -19,7 +19,7 @@ class Thresholding:
     @staticmethod
     def otsu(file: UploadFile):
         ret, thresh = cv2.threshold(
-            Utility.extract_image_binarisation(file), 127, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+            Utility.extract_image_gray(file), 127, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         cv2.imwrite("data/" + file.filename, thresh)
 
         plt.imshow(thresh)
@@ -28,7 +28,7 @@ class Thresholding:
     @staticmethod
     def adaptive(file: UploadFile):
         thresh = cv2.adaptiveThreshold(
-            Utility.extract_image_binarisation(file), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            Utility.extract_image_gray(file), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
             cv2.THRESH_BINARY, 11, 5)
         cv2.imwrite("data/" + file.filename, thresh)
 
@@ -38,7 +38,7 @@ class Thresholding:
     @staticmethod
     def niblack(file: UploadFile):
         thresh = cv2.ximgproc.niBlackThreshold(
-            Utility.extract_image_binarisation(file), 255, cv2.THRESH_BINARY, 11, 0)
+            Utility.extract_image_gray(file), 255, cv2.THRESH_BINARY, 11, 0)
         cv2.imwrite("data/" + file.filename, thresh)
 
         plt.imshow(thresh)
