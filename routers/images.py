@@ -28,3 +28,9 @@ async def upload_image_otsu(file: UploadFile):
 async def upload_image_adaptive(file: UploadFile):
     Thresholding.adaptive(file)
     return {"filename": file.filename}
+
+
+@router.post("/images/niblack")
+async def upload_image_niblack(file: UploadFile):
+    Thresholding.niblack(file)
+    return {"filename": file.filename}

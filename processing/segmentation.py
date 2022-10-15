@@ -1,7 +1,7 @@
 from fastapi import UploadFile
 from matplotlib import pyplot as plt
 import numpy as np
-import cv2
+import cv2.cv2 as cv2
 import time
 
 from processing.utility import Utility

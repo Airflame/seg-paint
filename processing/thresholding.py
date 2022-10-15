@@ -1,6 +1,6 @@
 from fastapi import UploadFile
 from matplotlib import pyplot as plt
-import cv2
+import cv2.cv2 as cv2
 import time
 
 from processing.utility import Utility
@@ -35,5 +35,13 @@ class Thresholding:
         plt.imshow(thresh)
         plt.show()
 
+    @staticmethod
+    def niblack(file: UploadFile):
+        thresh = cv2.ximgproc.niBlackThreshold(
+            Utility.extract_image_binarisation(file), 255, cv2.THRESH_BINARY, 11, 0)
+        cv2.imwrite("data/" + file.filename, thresh)
+
+        plt.imshow(thresh)
+        plt.show()
 
 
