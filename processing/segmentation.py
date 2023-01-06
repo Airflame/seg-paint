@@ -58,7 +58,7 @@ class Segmentation:
         cv2.imwrite("data/" + file.filename, img)
         cv2.imwrite("data/markers-" + file.filename, markers)
 
-        plt.imshow(markers)
+        plt.imshow(dist_transform)
         plt.show()
 
     @staticmethod
