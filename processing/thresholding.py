@@ -23,12 +23,16 @@ class Thresholding:
         Thresholding._ocr("data/binarisation.png", reference_text)
         Thresholding.otsu(photo_img, "otsu")
         Thresholding._ocr("data/otsu.png", reference_text)
+        Thresholding.adaptive(photo_img, "adaptive")
+        Thresholding._ocr("data/adaptive.png", reference_text)
+        Thresholding.niblack(photo_img, "niblack")
+        Thresholding._ocr("data/niblack.png", reference_text)
 
     @staticmethod
     def _ocr(filename: str, reference_text: str):
         img = np.array(Image.open(filename))
         text = pytesseract.image_to_string(img, config='--psm 6', lang='pol').strip()
-        print(SequenceMatcher(None, reference_text, text).ratio())
+        print("Text matching ratio " + '{:.2%}'.format(SequenceMatcher(None, reference_text, text).ratio()))
 
     @staticmethod
     def binarisation(image, filename: str):
@@ -38,6 +42,7 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        print("----------BINARISATION----------")
         print("Time elapsed {} s".format(end - start))
         print("Noise level {}".format(Metrics.estimate_noise(thresh)))
 
@@ -50,9 +55,9 @@ class Thresholding:
         ret, thresh = cv2.threshold(
             image, 127, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         end = time.time()
-
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        print("----------OTSU----------")
         print("Time elapsed {} s".format(end - start))
         print("Noise level {}".format(Metrics.estimate_noise(thresh)))
 
@@ -60,23 +65,31 @@ class Thresholding:
         plt.show()
 
     @staticmethod
-    def adaptive(file: UploadFile):
+    def adaptive(image, filename: str):
+        start = time.time()
         thresh = cv2.adaptiveThreshold(
-            Utility.extract_image_gray(file), 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
             cv2.THRESH_BINARY, 11, 5)
-        cv2.imwrite("data/" + file.filename, thresh)
+        end = time.time()
+        cv2.imwrite("data/" + filename + ".png", thresh)
 
+        print("----------ADAPTIVE----------")
+        print("Time elapsed {} s".format(end - start))
         print("Noise level {}".format(Metrics.estimate_noise(thresh)))
 
         plt.imshow(thresh)
         plt.show()
 
     @staticmethod
-    def niblack(file: UploadFile):
+    def niblack(image, filename: str):
+        start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
-            Utility.extract_image_gray(file), 255, cv2.THRESH_BINARY, 11, 0)
-        cv2.imwrite("data/" + file.filename, thresh)
+            image, 255, cv2.THRESH_BINARY, 11, 0)
+        end = time.time()
+        cv2.imwrite("data/" + filename + ".png", thresh)
 
+        print("----------NIBLACK----------")
+        print("Time elapsed {} s".format(end - start))
         print("Noise level {}".format(Metrics.estimate_noise(thresh)))
 
         plt.imshow(thresh)
