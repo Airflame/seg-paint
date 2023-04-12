@@ -2,6 +2,7 @@ from fastapi import APIRouter, UploadFile
 
 from processing.segmentation import Segmentation
 from processing.thresholding import Thresholding
+from processing.utility import Utility
 
 router = APIRouter()
 
@@ -20,13 +21,13 @@ async def upload_image(file: UploadFile):
 
 @router.post("/images/binarisation")
 async def upload_image_binarisation(file: UploadFile):
-    Thresholding.binarisation(file)
+    Thresholding.binarisation(Utility.extract_image_gray(file), "binarisation")
     return {"filename": file.filename}
 
 
 @router.post("/images/otsu")
 async def upload_image_otsu(file: UploadFile):
-    Thresholding.otsu(file)
+    Thresholding.otsu(Utility.extract_image_gray(file), "otsu")
     return {"filename": file.filename}
 
 
@@ -42,7 +43,13 @@ async def upload_image_niblack(file: UploadFile):
     return {"filename": file.filename}
 
 
+@router.post("/images/tests")
+async def perform_tests(reference_file: UploadFile, photo_file: UploadFile):
+    Thresholding.perform_test(reference_file, photo_file)
+    return {"filename": photo_file.filename}
+
+
 @router.post("/images/contour")
-async def upload_image_niblack(file: UploadFile):
+async def upload_image_contour(file: UploadFile):
     Segmentation.contour(file)
     return {"filename": file.filename}
