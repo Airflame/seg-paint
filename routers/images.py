@@ -31,9 +31,15 @@ async def upload_image_otsu(file: UploadFile):
     return {"filename": file.filename}
 
 
-@router.post("/images/adaptive")
-async def upload_image_adaptive(file: UploadFile):
-    Thresholding.adaptive(Utility.extract_image_gray(file), "adaptive")
+@router.post("/images/adaptive-gaussian")
+async def upload_image_adaptive_gaussian(file: UploadFile):
+    Thresholding.adaptive_gaussian(Utility.extract_image_gray(file), "adaptive-gaussian")
+    return {"filename": file.filename}
+
+
+@router.post("/images/adaptive-mean")
+async def upload_image_adaptive_mean(file: UploadFile):
+    Thresholding.adaptive_mean(Utility.extract_image_gray(file), "adaptive-mean")
     return {"filename": file.filename}
 
 

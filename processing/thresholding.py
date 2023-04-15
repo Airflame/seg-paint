@@ -1,5 +1,5 @@
 import time
-
+import fastwer
 from fastapi import UploadFile
 from matplotlib import pyplot as plt
 import cv2.cv2 as cv2
@@ -23,16 +23,22 @@ class Thresholding:
         Thresholding._ocr("data/binarisation.png", reference_text)
         Thresholding.otsu(photo_img, "otsu")
         Thresholding._ocr("data/otsu.png", reference_text)
-        Thresholding.adaptive(photo_img, "adaptive")
-        Thresholding._ocr("data/adaptive.png", reference_text)
+        Thresholding.adaptive_gaussian(photo_img, "adaptive-gaussian")
+        Thresholding._ocr("data/adaptive-gaussian.png", reference_text)
+        Thresholding.adaptive_mean(photo_img, "adaptive-mean")
+        Thresholding._ocr("data/adaptive-mean.png", reference_text)
         Thresholding.niblack(photo_img, "niblack")
         Thresholding._ocr("data/niblack.png", reference_text)
+        # Thresholding.sauvola(photo_img, "sauvola")
+        # Thresholding._ocr("data/sauvola.png", reference_text)
 
     @staticmethod
     def _ocr(filename: str, reference_text: str):
         img = np.array(Image.open(filename))
         text = pytesseract.image_to_string(img, config='--psm 6', lang='pol').strip()
         print("Text matching ratio " + '{:.2%}'.format(SequenceMatcher(None, reference_text, text).ratio()))
+        print("Character error rate " + str(fastwer.score_sent(text, reference_text, char_level=True)))
+        print("Word error rate " + str(fastwer.score_sent(text, reference_text, char_level=False)))
 
     @staticmethod
     def binarisation(image, filename: str):
@@ -65,7 +71,7 @@ class Thresholding:
         plt.show()
 
     @staticmethod
-    def adaptive(image, filename: str):
+    def adaptive_gaussian(image, filename: str):
         start = time.time()
         thresh = cv2.adaptiveThreshold(
             image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
@@ -73,7 +79,23 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
-        print("----------ADAPTIVE----------")
+        print("----------ADAPTIVE-GAUSSIAN----------")
+        print("Time elapsed {} s".format(end - start))
+        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+
+        plt.imshow(thresh)
+        plt.show()
+
+    @staticmethod
+    def adaptive_mean(image, filename: str):
+        start = time.time()
+        thresh = cv2.adaptiveThreshold(
+            image, 255, cv2.ADAPTIVE_THRESH_MEAN_C,
+            cv2.THRESH_BINARY, 11, 5)
+        end = time.time()
+        cv2.imwrite("data/" + filename + ".png", thresh)
+
+        print("----------ADAPTIVE-MEAN---------")
         print("Time elapsed {} s".format(end - start))
         print("Noise level {}".format(Metrics.estimate_noise(thresh)))
 
@@ -84,7 +106,7 @@ class Thresholding:
     def niblack(image, filename: str):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
-            image, 255, cv2.THRESH_BINARY, 11, 0)
+            image, 255, cv2.THRESH_BINARY, 11, 0, binarizationMethod=cv2.ximgproc.BINARIZATION_NIBLACK)
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
@@ -95,4 +117,18 @@ class Thresholding:
         plt.imshow(thresh)
         plt.show()
 
+    @staticmethod
+    def sauvola(image, filename: str):
+        start = time.time()
+        thresh = cv2.ximgproc.niBlackThreshold(
+            image, 255, cv2.THRESH_BINARY, 11, 0, binarizationMethod=cv2.ximgproc.BINARIZATION_SAUVOLA)
+        end = time.time()
+        cv2.imwrite("data/" + filename + ".png", thresh)
+
+        print("----------SAUVOLA----------")
+        print("Time elapsed {} s".format(end - start))
+        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+
+        plt.imshow(thresh)
+        plt.show()
 
