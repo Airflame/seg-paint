@@ -33,6 +33,8 @@ class Thresholding:
         Thresholding._ocr("data/sauvola.png", reference_text)
         Thresholding.nick(photo_img, "nick")
         Thresholding._ocr("data/nick.png", reference_text)
+        Thresholding.wolf(photo_img, "wolf")
+        Thresholding._ocr("data/wolf.png", reference_text)
 
     @staticmethod
     def _ocr(filename: str, reference_text: str):
@@ -149,4 +151,18 @@ class Thresholding:
         plt.imshow(thresh)
         plt.show()
 
+    @staticmethod
+    def wolf(image, filename: str):
+        start = time.time()
+        thresh = cv2.ximgproc.niBlackThreshold(
+            image, 255, cv2.THRESH_BINARY, 41, 0.2, binarizationMethod=cv2.ximgproc.BINARIZATION_WOLF)
+        end = time.time()
+        cv2.imwrite("data/" + filename + ".png", thresh)
+
+        print("----------WOLF----------")
+        print("Time elapsed {} s".format(end - start))
+        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+
+        plt.imshow(thresh)
+        plt.show()
 
