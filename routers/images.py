@@ -55,6 +55,18 @@ async def perform_tests(reference_file: UploadFile, photo_file: UploadFile):
     return {"filename": photo_file.filename}
 
 
+@router.post("/images/sauvola-test")
+async def perform_sauvola_test(reference_file: UploadFile,
+                               photo_file_1: UploadFile,
+                               photo_file_2: UploadFile,
+                               photo_file_3: UploadFile,
+                               photo_file_4: UploadFile,
+                               photo_file_5: UploadFile):
+    Thresholding.perform_sauvola_test(reference_file,
+                                      [photo_file_1, photo_file_2, photo_file_3, photo_file_4, photo_file_5])
+    return {"filename": photo_file_1.filename}
+
+
 @router.post("/images/contour")
 async def upload_image_contour(file: UploadFile):
     Segmentation.contour(file)
