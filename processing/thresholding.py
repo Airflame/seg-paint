@@ -42,8 +42,13 @@ class Thresholding:
         for photo_file in photo_files:
             photo_images.append(Utility.extract_image_gray(photo_file))
 
-        for block_size in range(3, 51, 2):
-            for k in np.arange(0.1, 0.8, 0.1):
+        z = []
+        max_match = 0
+        selected_block = 0
+        selected_k = 0
+        for block_size in range(3, 61, 2):
+            row = []
+            for k in np.arange(0.1, 0.9, 0.05):
                 results = {"gestalt": [], "cer": [], "wer": []}
                 for photo_img in photo_images:
                     Thresholding.sauvola(photo_img, "sauvola", block_size, k, False)
@@ -51,8 +56,18 @@ class Thresholding:
                     results["gestalt"].append(single_result["gestalt"])
                     results["cer"].append(single_result["cer"])
                     results["wer"].append(single_result["wer"])
+                match = sum(results["gestalt"])/len(results["gestalt"])
                 print(str(block_size) + "," + str(k) + " ---> "
-                      + str(sum(results["gestalt"])/len(results["gestalt"])))
+                      + str(match))
+                row.append(match)
+                if match > max_match:
+                    max_match = match
+                    selected_block = block_size
+                    selected_k = k
+            z.append(row)
+        Utility.plot_3d(np.array(z))
+        print(str(max_match) + " " + str(selected_block) + " " + str(selected_k))
+
 
     @staticmethod
     def binarisation(image, filename: str):
