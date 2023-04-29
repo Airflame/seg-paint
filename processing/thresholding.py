@@ -162,32 +162,32 @@ class Thresholding:
             plt.show()
 
     @staticmethod
-    def nick(image, filename: str):
+    def nick(image, filename: str, block_size: int = 41, k: int = -0.2, print_info: bool = True):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
-            image, 255, cv2.THRESH_BINARY, 41, -0.2, binarizationMethod=cv2.ximgproc.BINARIZATION_NICK)
+            image, 255, cv2.THRESH_BINARY, block_size, k, binarizationMethod=cv2.ximgproc.BINARIZATION_NICK)
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
-        print("----------NICK----------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
-
-        plt.imshow(thresh)
-        plt.show()
+        if print_info:
+            print("----------NICK----------")
+            print("Time elapsed {} s".format(end - start))
+            print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+            plt.imshow(thresh)
+            plt.show()
 
     @staticmethod
-    def wolf(image, filename: str):
+    def wolf(image, filename: str, block_size: int = 41, k: int = 0.2, print_info: bool = True):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
-            image, 255, cv2.THRESH_BINARY, 41, 0.2, binarizationMethod=cv2.ximgproc.BINARIZATION_WOLF)
+            image, 255, cv2.THRESH_BINARY, block_size, k, binarizationMethod=cv2.ximgproc.BINARIZATION_WOLF)
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
-        print("----------WOLF----------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
-
-        plt.imshow(thresh)
-        plt.show()
+        if print_info:
+            print("----------WOLF----------")
+            print("Time elapsed {} s".format(end - start))
+            print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+            plt.imshow(thresh)
+            plt.show()
 
