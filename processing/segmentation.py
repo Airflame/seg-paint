@@ -51,14 +51,24 @@ class Segmentation:
         ret, markers = cv2.connectedComponents(sure_fg)
         markers = markers + 1
         markers[unknown == 255] = 0
+        #plt.imshow(markers)
 
         markers = cv2.watershed(img, markers)
-        img[markers == -1] = [0, 255, 0]
+        img[markers == -1] = [0, 0, 0]
+        #img[markers == 1] = [255, 255, 255]
+        img[markers == 2] = [0, 0, 255]
+        img[markers == 3] = [0, 127, 255]
+        img[markers == 4] = [0, 255, 255]
+        img[markers == 5] = [0, 255, 0]
+        img[markers == 6] = [255, 0, 0]
+        img[markers == 7] = [130, 0, 75]
+        img[markers == 8] = [211, 0, 148]
 
         cv2.imwrite("data/" + file.filename, img)
         cv2.imwrite("data/markers-" + file.filename, markers)
 
-        plt.imshow(dist_transform)
+        #plt.imshow(dist_transform)
+        plt.imshow(markers)
         plt.show()
 
     @staticmethod
@@ -76,9 +86,10 @@ class Segmentation:
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)
 
-        cv2.drawContours(img, contours, -1, (0,255,0), 1)
+        cv2.drawContours(img, contours, -1, (0, 0, 255), thickness=cv2.FILLED)
+        cv2.drawContours(img, contours, -1, (0, 0, 0), 1)
 
         cv2.imwrite("data/" + file.filename, img)
 
-        plt.imshow(sure_bg)
+        plt.imshow(img)
         plt.show()

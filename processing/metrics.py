@@ -2,6 +2,7 @@ import math
 import fastwer
 import numpy as np
 from PIL import Image
+import cv2.cv2 as cv2
 import pytesseract
 from scipy.signal import convolve2d
 from difflib import SequenceMatcher
@@ -30,3 +31,19 @@ class Metrics:
         sigma = np.sum(np.sum(np.absolute(convolve2d(I, M))))
         sigma = sigma * math.sqrt(0.5 * math.pi) / (6 * (W - 2) * (H - 2))
         return sigma
+
+    @staticmethod
+    def calculate_iou(image, ground_truth):
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        hsv_ground_truth = cv2.cvtColor(ground_truth, cv2.COLOR_BGR2HSV)
+        mask_image = cv2.inRange(hsv_image, (0, 255, 255), (0, 255, 255))
+        mask_ground_truth = cv2.inRange(hsv_ground_truth, (0, 255, 255), (0, 255, 255))
+        target_image = cv2.bitwise_and(image, image, mask=mask_image)
+        target_ground_truth = cv2.bitwise_and(ground_truth, ground_truth, mask=mask_ground_truth)
+        target_intersection = cv2.bitwise_and(target_image, target_ground_truth)
+        target_union = cv2.bitwise_or(target_image, target_ground_truth)
+        cv2.imwrite("data/target_intersection.png", target_intersection)
+        cv2.imwrite("data/target_union.png", target_union)
+        res_intersection = cv2.cvtColor(target_intersection, cv2.COLOR_BGR2GRAY)
+        res_union = cv2.cvtColor(target_union, cv2.COLOR_BGR2GRAY)
+        return cv2.countNonZero(res_intersection) / cv2.countNonZero(res_union)

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, UploadFile
 
+from processing.metrics import Metrics
 from processing.segmentation import Segmentation
 from processing.thresholding import Thresholding
 from processing.utility import Utility
@@ -71,3 +72,10 @@ async def perform_sauvola_test(reference_file: UploadFile,
 async def upload_image_contour(file: UploadFile):
     Segmentation.contour(file)
     return {"filename": file.filename}
+
+
+@router.post("/images/iou")
+async def calculate_iou(image: UploadFile,
+                        ground_truth: UploadFile):
+    iou = Metrics.calculate_iou(Utility.extract_image(image), Utility.extract_image(ground_truth))
+    return iou
