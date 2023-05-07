@@ -51,11 +51,9 @@ class Segmentation:
         ret, markers = cv2.connectedComponents(sure_fg)
         markers = markers + 1
         markers[unknown == 255] = 0
-        #plt.imshow(markers)
 
         markers = cv2.watershed(img, markers)
         img[markers == -1] = [0, 0, 0]
-        #img[markers == 1] = [255, 255, 255]
         img[markers == 2] = [0, 0, 255]
         img[markers == 3] = [0, 127, 255]
         img[markers == 4] = [0, 255, 255]
@@ -67,7 +65,6 @@ class Segmentation:
         cv2.imwrite("data/" + file.filename, img)
         cv2.imwrite("data/markers-" + file.filename, markers)
 
-        #plt.imshow(dist_transform)
         plt.imshow(markers)
         plt.show()
 
