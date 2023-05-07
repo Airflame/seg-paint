@@ -62,7 +62,7 @@ class Segmentation:
         img[markers == 7] = [130, 0, 75]
         img[markers == 8] = [211, 0, 148]
 
-        cv2.imwrite("data/" + file.filename, img)
+        cv2.imwrite("data/" + file.filename[:-4] + "-watershed.png", img)
         cv2.imwrite("data/markers-" + file.filename, markers)
 
         plt.imshow(markers)
@@ -86,7 +86,7 @@ class Segmentation:
         cv2.drawContours(img, contours, -1, (0, 0, 255), thickness=cv2.FILLED)
         cv2.drawContours(img, contours, -1, (0, 0, 0), 1)
 
-        cv2.imwrite("data/" + file.filename, img)
+        cv2.imwrite("data/" + file.filename[:-4] + "-contour.png", img)
 
         plt.imshow(img)
         plt.show()
