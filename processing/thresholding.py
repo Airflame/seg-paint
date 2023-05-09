@@ -155,7 +155,7 @@ class Thresholding:
         return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
-    def niblack(image, filename: str, block_size: int = 41, k: int = 0.2, print_info: bool = True):
+    def niblack(image, filename: str, block_size: int = 41, k: float = 0.2, print_info: bool = True):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
             image, 255, cv2.THRESH_BINARY, block_size, k, binarizationMethod=cv2.ximgproc.BINARIZATION_NIBLACK)
@@ -175,7 +175,7 @@ class Thresholding:
         return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
-    def sauvola(image, filename: str, block_size: int = 41, k: int = 0.2, print_info: bool = True):
+    def sauvola(image, filename: str, block_size: int = 41, k: float = 0.2, print_info: bool = True):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
             image, 255, cv2.THRESH_BINARY, block_size, k, binarizationMethod=cv2.ximgproc.BINARIZATION_SAUVOLA)
@@ -194,7 +194,7 @@ class Thresholding:
         return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
-    def nick(image, filename: str, block_size: int = 41, k: int = -0.2, print_info: bool = True):
+    def nick(image, filename: str, block_size: int = 41, k: float = -0.2, print_info: bool = True):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
             image, 255, cv2.THRESH_BINARY, block_size, k, binarizationMethod=cv2.ximgproc.BINARIZATION_NICK)
@@ -213,7 +213,7 @@ class Thresholding:
         return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
-    def wolf(image, filename: str, block_size: int = 41, k: int = 0.2, print_info: bool = True):
+    def wolf(image, filename: str, block_size: int = 41, k: float = 0.2, print_info: bool = True):
         start = time.time()
         thresh = cv2.ximgproc.niBlackThreshold(
             image, 255, cv2.THRESH_BINARY, block_size, k, binarizationMethod=cv2.ximgproc.BINARIZATION_WOLF)
