@@ -17,7 +17,7 @@ class Thresholding:
         photo_img = Utility.extract_image_gray(photo_file)
         reference_text = pytesseract.image_to_string(reference_img, config='--psm 6', lang='pol').strip()
 
-        Thresholding.binarisation(photo_img, "binarisation")
+        Thresholding.naive(photo_img, "binarisation")
         Metrics.estimate_text_readability("data/binarisation.png", reference_text)
         Thresholding.otsu(photo_img, "otsu")
         Metrics.estimate_text_readability("data/otsu.png", reference_text)
@@ -68,21 +68,24 @@ class Thresholding:
         Utility.plot_3d(np.array(z))
         print(str(max_match) + " " + str(selected_block) + " " + str(selected_k))
 
-
     @staticmethod
-    def binarisation(image, filename: str):
+    def naive(image, filename: str):
         start = time.time()
         ret, thresh = cv2.threshold(
             image, 127, 255, cv2.THRESH_BINARY)
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
-        print("----------BINARISATION----------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
+        print("----------NAIVE----------")
+        print("Time elapsed {} s".format(time_elapsed))
+        print("Noise level {}".format(noise))
 
         plt.imshow(thresh)
         plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def otsu(image, filename: str):
@@ -92,12 +95,16 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         print("----------OTSU----------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+        print("Time elapsed {} s".format(time_elapsed))
+        print("Noise level {}".format(noise))
 
         plt.imshow(thresh)
         plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def adaptive_gaussian(image, filename: str):
@@ -108,12 +115,16 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         print("----------ADAPTIVE-GAUSSIAN----------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+        print("Time elapsed {} s".format(time_elapsed))
+        print("Noise level {}".format(noise))
 
         plt.imshow(thresh)
         plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def adaptive_mean(image, filename: str):
@@ -124,12 +135,16 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         print("----------ADAPTIVE-MEAN---------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+        print("Time elapsed {} s".format(time_elapsed))
+        print("Noise level {}".format(noise))
 
         plt.imshow(thresh)
         plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def niblack(image, filename: str):
@@ -139,12 +154,16 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         print("----------NIBLACK----------")
-        print("Time elapsed {} s".format(end - start))
-        print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+        print("Time elapsed {} s".format(time_elapsed))
+        print("Noise level {}".format(noise))
 
         plt.imshow(thresh)
         plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def sauvola(image, filename: str, block_size: int = 41, k: int = 0.2, print_info: bool = True):
@@ -154,12 +173,16 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         if print_info:
             print("----------SAUVOLA----------")
-            print("Time elapsed {} s".format(end - start))
-            print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+            print("Time elapsed {} s".format(time_elapsed))
+            print("Noise level {}".format(noise))
             plt.imshow(thresh)
             plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def nick(image, filename: str, block_size: int = 41, k: int = -0.2, print_info: bool = True):
@@ -169,12 +192,16 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         if print_info:
             print("----------NICK----------")
-            print("Time elapsed {} s".format(end - start))
-            print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+            print("Time elapsed {} s".format(time_elapsed))
+            print("Noise level {}".format(noise))
             plt.imshow(thresh)
             plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
     @staticmethod
     def wolf(image, filename: str, block_size: int = 41, k: int = 0.2, print_info: bool = True):
@@ -184,10 +211,14 @@ class Thresholding:
         end = time.time()
         cv2.imwrite("data/" + filename + ".png", thresh)
 
+        time_elapsed = end - start
+        noise = Metrics.estimate_noise(thresh)
         if print_info:
             print("----------WOLF----------")
-            print("Time elapsed {} s".format(end - start))
-            print("Noise level {}".format(Metrics.estimate_noise(thresh)))
+            print("Time elapsed {} s".format(time_elapsed))
+            print("Noise level {}".format(noise))
             plt.imshow(thresh)
             plt.show()
+
+        return {"filename": filename + ".png", "time-elapsed": time_elapsed, "noise-variance": noise}
 
