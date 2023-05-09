@@ -1,10 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
-from routers import thresholding, segmentation
+from routers import thresholding_router, segmentation_router, metrics_router
 
 app = FastAPI()
-app.include_router(thresholding.router)
-app.include_router(segmentation.router)
+app.include_router(thresholding_router.router)
+app.include_router(segmentation_router.router)
+app.include_router(metrics_router.router)
 
 
 @app.get("/")

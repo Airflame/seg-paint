@@ -26,11 +26,13 @@ class Segmentation:
         center = np.uint8(center)
         res = center[label.flatten()]
         result_image = res.reshape(img.shape)
-        cv2.imwrite("data/"+file.filename, result_image)
+        cv2.imwrite("data/" + file.filename[:-4] + "-k-means.png", result_image)
 
         print("Time elapsed {} s".format(end-start))
         plt.imshow(result_image)
         plt.show()
+
+        return {"filename": file.filename[:-4] + "-k-means.png"}
 
     @staticmethod
     def watershed(file: UploadFile):
@@ -68,6 +70,8 @@ class Segmentation:
         plt.imshow(markers)
         plt.show()
 
+        return {"filename": file.filename[:-4] + "-watershed.png"}
+
     @staticmethod
     def contour(file: UploadFile):
         img = Utility.extract_image(file)
@@ -90,3 +94,5 @@ class Segmentation:
 
         plt.imshow(img)
         plt.show()
+
+        return {"filename": file.filename[:-4] + "-contour.png"}
